@@ -13,7 +13,7 @@ export interface Config {
   branch: string;
   checkIntervalHours: number;
   reportDir: string;
-  subPath: string;
+  subPaths: string[];
 }
 
 export const definition: ChatCompletionFunctionTool = {
@@ -27,7 +27,7 @@ Returns: JSON object with:
 - branch: Branch name to monitor
 - checkIntervalHours: Number of hours to look back
 - reportDir: Directory to save reports
-- subPath: Sub-path within repo to scope analysis`,
+- subPaths: Array of sub-paths within repo to scope analysis`,
     parameters: {
       type: 'object',
       properties: {},
@@ -41,7 +41,7 @@ export const handler: ToolFunction<Record<string, never>> = async () => {
     branch: getBranch(),
     checkIntervalHours: getCheckIntervalHours(),
     reportDir: getReportDir(),
-    subPath: getSubPath(),
+    subPaths: getSubPath(),
   };
 
   return JSON.stringify(config);

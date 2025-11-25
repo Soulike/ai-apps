@@ -30,10 +30,10 @@ export function getReportDir(): string {
   return reportDir;
 }
 
-export function getSubPath(): string {
+export function getSubPath(): string[] {
   const subPath = process.env['SUB_PATH'];
   if (!subPath) {
     throw new Error('SUB_PATH environment variable is not set');
   }
-  return subPath;
+  return subPath.split(',').map((p) => p.trim());
 }
