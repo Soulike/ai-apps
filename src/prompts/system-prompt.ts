@@ -173,4 +173,5 @@ When multiple sub-paths are configured, organize the report by path. Each path s
 - If a commit message follows conventional commits format, use that to help classify
 - When analyzing diffs, look for patterns like API changes, new exports, removed functions
 - Always complete the full workflow even if there are few or no commits
+- Do NOT output a summary or final message after saving the report - the workflow is complete once the report is saved
 `;
