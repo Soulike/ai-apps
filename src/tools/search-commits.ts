@@ -1,7 +1,6 @@
 import type {ChatCompletionFunctionTool} from 'openai/resources/chat/completions';
 import type {ToolFunction} from '../ai/tool-registry.js';
 import {execGit} from '../helpers/git-helpers.js';
-import {getBranch, getCheckIntervalHours} from '../helpers/env-helpers.js';
 
 export interface SearchCommit {
   hash: string;
@@ -13,7 +12,8 @@ export interface SearchCommit {
 
 export interface SearchCommitsParams {
   query: string;
-  hours?: number;
+  branch: string;
+  hours: number;
 }
 
 export const definition: ChatCompletionFunctionTool = {
@@ -29,22 +29,23 @@ export const definition: ChatCompletionFunctionTool = {
           type: 'string',
           description: 'Keyword or phrase to search for in commit messages.',
         },
+        branch: {
+          type: 'string',
+          description: 'Branch name to search commits in.',
+        },
         hours: {
           type: 'number',
-          description:
-            'Number of hours to look back. Defaults to CHECK_INTERVAL_HOURS env var or 1 hour.',
+          description: 'Number of hours to look back.',
         },
       },
-      required: ['query'],
+      required: ['query', 'branch', 'hours'],
     },
   },
 };
 
 export const handler: ToolFunction<SearchCommitsParams> = async (args) => {
-  const {query, hours} = args;
-  const branch = getBranch();
-  const lookbackHours = hours ?? getCheckIntervalHours();
-  const since = `${lookbackHours} hours ago`;
+  const {query, branch, hours} = args;
+  const since = `${hours} hours ago`;
 
   // Format: hash|shortHash|author|date|message
   const format = '%H|%h|%an|%aI|%s';

@@ -1,10 +1,10 @@
 import type {ChatCompletionFunctionTool} from 'openai/resources/chat/completions';
 import type {ToolFunction} from '../ai/tool-registry.js';
 import {execGit} from '../helpers/git-helpers.js';
-import {getBranch, getCheckIntervalHours} from '../helpers/env-helpers.js';
 
 export interface ListChangedFilesParams {
-  hours?: number;
+  branch: string;
+  hours: number;
 }
 
 export const definition: ChatCompletionFunctionTool = {
@@ -16,19 +16,22 @@ export const definition: ChatCompletionFunctionTool = {
     parameters: {
       type: 'object',
       properties: {
+        branch: {
+          type: 'string',
+          description: 'Branch name to check for changed files.',
+        },
         hours: {
           type: 'number',
-          description:
-            'Number of hours to look back. Defaults to CHECK_INTERVAL_HOURS env var or 1 hour.',
+          description: 'Number of hours to look back.',
         },
       },
+      required: ['branch', 'hours'],
     },
   },
 };
 
 export const handler: ToolFunction<ListChangedFilesParams> = async (args) => {
-  const hours = args.hours ?? getCheckIntervalHours();
-  const branch = getBranch();
+  const {branch, hours} = args;
   const since = `${hours} hours ago`;
 
   const output = await execGit([

@@ -1,7 +1,6 @@
 import type {ChatCompletionFunctionTool} from 'openai/resources/chat/completions';
 import type {ToolFunction} from '../ai/tool-registry.js';
 import {execGit} from '../helpers/git-helpers.js';
-import {getBranch, getCheckIntervalHours} from '../helpers/env-helpers.js';
 
 export interface Commit {
   hash: string;
@@ -12,7 +11,8 @@ export interface Commit {
 }
 
 export interface GetRecentCommitsParams {
-  hours?: number;
+  branch: string;
+  hours: number;
 }
 
 export const definition: ChatCompletionFunctionTool = {
@@ -20,23 +20,26 @@ export const definition: ChatCompletionFunctionTool = {
   function: {
     name: 'get_recent_commits',
     description:
-      'Get commits from the last N hours on the configured branch. Returns a list of commits with hash, author, date, and message.',
+      'Get commits from the last N hours on the specified branch. Returns a list of commits with hash, author, date, and message.',
     parameters: {
       type: 'object',
       properties: {
+        branch: {
+          type: 'string',
+          description: 'Branch name to get commits from.',
+        },
         hours: {
           type: 'number',
-          description:
-            'Number of hours to look back. Defaults to CHECK_INTERVAL_HOURS env var or 1 hour.',
+          description: 'Number of hours to look back.',
         },
       },
+      required: ['branch', 'hours'],
     },
   },
 };
 
 export const handler: ToolFunction<GetRecentCommitsParams> = async (args) => {
-  const hours = args.hours ?? getCheckIntervalHours();
-  const branch = getBranch();
+  const {branch, hours} = args;
   const since = `${hours} hours ago`;
 
   // Format: hash|shortHash|author|date|message
