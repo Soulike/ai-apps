@@ -2,22 +2,6 @@ import type {ChatCompletionFunctionTool} from 'openai/resources/chat/completions
 import type {ToolFunction} from '@ai/openai-session';
 import {createOctokit, type GitHubBaseParams} from './github-helpers.js';
 
-export interface ChangedFile {
-  path: string;
-  status: 'added' | 'modified' | 'deleted' | 'renamed';
-  additions: number;
-  deletions: number;
-  previousPath?: string | undefined;
-}
-
-export interface CommitDetails {
-  hash: string;
-  author: string;
-  date: string;
-  message: string;
-  files: ChangedFile[];
-}
-
 export interface GetCommitDetailsParams extends GitHubBaseParams {
   commitHash: string;
 }
@@ -28,7 +12,7 @@ export const definition: ChatCompletionFunctionTool = {
     name: 'github_get_commit_details',
     description: `Get detailed information about a specific commit including changed files.
 
-Returns: JSON with hash, author, date, message, and array of changed files with path, status, additions, and deletions.`,
+Returns: JSON commit object from GitHub API with full details and files array.`,
     parameters: {
       type: 'object',
       properties: {
@@ -55,46 +39,14 @@ Returns: JSON with hash, author, date, message, and array of changed files with 
   },
 };
 
-function mapStatus(
-  status: string | undefined,
-): 'added' | 'modified' | 'deleted' | 'renamed' {
-  switch (status) {
-    case 'added':
-      return 'added';
-    case 'removed':
-      return 'deleted';
-    case 'renamed':
-      return 'renamed';
-    default:
-      return 'modified';
-  }
-}
-
 export const handler: ToolFunction<GetCommitDetailsParams> = async (args) => {
   const octokit = createOctokit(args.token);
 
-  const {data: commit} = await octokit.repos.getCommit({
+  const {data} = await octokit.repos.getCommit({
     owner: args.owner,
     repo: args.repo,
     ref: args.commitHash,
   });
 
-  const files: ChangedFile[] =
-    commit.files?.map((f) => ({
-      path: f.filename,
-      status: mapStatus(f.status),
-      additions: f.additions,
-      deletions: f.deletions,
-      previousPath: f.previous_filename,
-    })) ?? [];
-
-  const result: CommitDetails = {
-    hash: commit.sha,
-    author: commit.commit.author?.name ?? 'Unknown',
-    date: commit.commit.author?.date ?? '',
-    message: commit.commit.message,
-    files,
-  };
-
-  return JSON.stringify(result);
+  return JSON.stringify(data);
 };

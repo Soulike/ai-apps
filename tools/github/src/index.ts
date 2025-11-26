@@ -9,20 +9,13 @@ export * as getCommitDiff from './get-commit-diff.js';
 export * as getFileContent from './get-file-content.js';
 export * as getFileHistory from './get-file-history.js';
 
-// Re-export types
+// Re-export param types
 export type {GetRepoStatusParams} from './get-repo-status.js';
-export type {Commit, GetRecentCommitsParams} from './get-recent-commits.js';
-export type {
-  ChangedFile,
-  CommitDetails,
-  GetCommitDetailsParams,
-} from './get-commit-details.js';
+export type {GetRecentCommitsParams} from './get-recent-commits.js';
+export type {GetCommitDetailsParams} from './get-commit-details.js';
 export type {GetCommitDiffParams} from './get-commit-diff.js';
 export type {GetFileContentParams} from './get-file-content.js';
-export type {
-  FileHistoryCommit,
-  GetFileHistoryParams,
-} from './get-file-history.js';
+export type {GetFileHistoryParams} from './get-file-history.js';
 
 // Convenience: Import all tools for bulk registration
 import * as getRepoStatus from './get-repo-status.js';

@@ -2,14 +2,6 @@ import type {ChatCompletionFunctionTool} from 'openai/resources/chat/completions
 import type {ToolFunction} from '@ai/openai-session';
 import {createOctokit, type GitHubBaseParams} from './github-helpers.js';
 
-export interface FileHistoryCommit {
-  hash: string;
-  shortHash: string;
-  author: string;
-  date: string;
-  message: string;
-}
-
 export interface GetFileHistoryParams extends GitHubBaseParams {
   filePath: string;
   maxCount?: number;
@@ -22,7 +14,7 @@ export const definition: ChatCompletionFunctionTool = {
     name: 'github_get_file_history',
     description: `Get the commit history for a specific file.
 
-Returns: JSON array of commit objects with hash, shortHash, author, date (ISO 8601), and message.`,
+Returns: JSON array of commit objects from GitHub API.`,
     parameters: {
       type: 'object',
       properties: {
@@ -60,7 +52,7 @@ Returns: JSON array of commit objects with hash, shortHash, author, date (ISO 86
 export const handler: ToolFunction<GetFileHistoryParams> = async (args) => {
   const octokit = createOctokit(args.token);
 
-  const {data: commits} = await octokit.repos.listCommits({
+  const {data} = await octokit.repos.listCommits({
     owner: args.owner,
     repo: args.repo,
     path: args.filePath,
@@ -68,13 +60,5 @@ export const handler: ToolFunction<GetFileHistoryParams> = async (args) => {
     ...(args.ref && {sha: args.ref}),
   });
 
-  const result: FileHistoryCommit[] = commits.map((c) => ({
-    hash: c.sha,
-    shortHash: c.sha.slice(0, 7),
-    author: c.commit.author?.name ?? 'Unknown',
-    date: c.commit.author?.date ?? '',
-    message: c.commit.message.split('\n')[0] ?? '',
-  }));
-
-  return JSON.stringify(result);
+  return JSON.stringify(data);
 };
