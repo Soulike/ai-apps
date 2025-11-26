@@ -54,7 +54,7 @@ export const handler: ToolFunction<GetCommitDiffParams> = async (args) => {
 
   assert(
     typeof diff === 'string',
-    'GitHub API is responding with unexpected diff result.',
+    `GitHub API returned unexpected diff type: ${typeof diff}. Expected string.`,
   );
 
   return diff || '(no diff content)';
