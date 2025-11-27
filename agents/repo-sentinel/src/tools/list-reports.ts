@@ -49,11 +49,15 @@ export const handler: ToolFunction<ListReportsParams> = async (args) => {
   const reports: ReportInfo[] = [];
   for (const filename of mdFiles) {
     const filePath = join(reportDir, filename);
-    const stats = await stat(filePath);
-    reports.push({
-      filename,
-      modifiedAt: stats.mtime.toISOString(),
-    });
+    try {
+      const stats = await stat(filePath);
+      reports.push({
+        filename,
+        modifiedAt: stats.mtime.toISOString(),
+      });
+    } catch {
+      // Skip files that become inaccessible
+    }
   }
 
   reports.sort(
