@@ -1,5 +1,8 @@
 packages:
-  - 'agents/*'
-  - 'configs/*'
-  - 'libraries/*'
-  - 'tools/*'
+  - agents/*
+  - configs/*
+  - libraries/*
+  - tools/*
+
+onlyBuiltDependencies:
+  - keytar
