@@ -48,8 +48,12 @@ export async function runAgent(logger: Logger): Promise<void> {
 
   // Authenticate with GitHub if using GitHub provider
   if (provider === 'github') {
-    const token = await authenticateWithDeviceFlow(['repo']);
-    GitHubTokenStore.set(token);
+    try {
+      const token = await authenticateWithDeviceFlow(['repo']);
+      GitHubTokenStore.set(token);
+    } catch (cause) {
+      throw new Error('GitHub authentication failed', {cause});
+    }
   }
 
   const registry = createToolRegistry(provider);
