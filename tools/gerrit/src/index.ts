@@ -14,8 +14,6 @@ export type {GetFileContentParams} from './get-file-content.js';
 export type {GetProjectInfoParams} from './get-project-info.js';
 export type {GetChangedFilesParams} from './get-changed-files.js';
 
-export type {GerritBaseParams} from './gerrit-helpers.js';
-
 import * as getDirectoryChanges from './get-directory-changes.js';
 import * as getFileChanges from './get-file-changes.js';
 import * as getChangeDetails from './get-change-details.js';

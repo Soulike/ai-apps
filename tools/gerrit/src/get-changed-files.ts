@@ -1,6 +1,6 @@
 import type {ChatCompletionFunctionTool} from 'openai/resources/chat/completions';
 import type {ToolFunction} from '@ai/openai-session';
-import {gerritFetch, buildUrl} from './gerrit-helpers.js';
+import {gerritFetch, buildUrl} from './helpers/fetch.js';
 
 export interface GetChangedFilesParams {
   host: string;

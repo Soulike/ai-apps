@@ -1,6 +1,6 @@
 import type {ChatCompletionFunctionTool} from 'openai/resources/chat/completions';
 import type {ToolFunction} from '@ai/openai-session';
-import {gerritFetchRaw, buildUrl} from './gerrit-helpers.js';
+import {gerritFetchRaw, buildUrl} from './helpers/fetch.js';
 
 export interface GetChangeDiffParams {
   host: string;

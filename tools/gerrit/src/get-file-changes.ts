@@ -1,32 +1,13 @@
 import type {ChatCompletionFunctionTool} from 'openai/resources/chat/completions';
 import type {ToolFunction} from '@ai/openai-session';
-import {
-  gerritFetch,
-  buildUrl,
-  buildGerritQuery,
-  formatGerritTimestamp,
-  type GerritBaseParams,
-} from './gerrit-helpers.js';
+import {fetchChanges} from './helpers/changes.js';
+import {buildGerritQuery, formatGerritTimestamp} from './helpers/query.js';
+import type {GerritBaseParams} from './helpers/types.js';
 
 export interface GetFileChangesParams extends GerritBaseParams {
   branch: string;
   hours: number;
   file: string;
-}
-
-interface ChangeInfo {
-  id: string;
-  project: string;
-  branch: string;
-  change_id: string;
-  subject: string;
-  status: string;
-  created: string;
-  updated: string;
-  insertions: number;
-  deletions: number;
-  _number: number;
-  owner: {name?: string};
 }
 
 export const definition: ChatCompletionFunctionTool = {
@@ -78,23 +59,7 @@ export const handler: ToolFunction<GetFileChangesParams> = async (args) => {
     file: args.file,
   });
 
-  const url = buildUrl(args.host, '/changes/', {
-    q: query,
-    n: '100',
-  });
-
-  const data = await gerritFetch<ChangeInfo[]>(url);
-
-  const changes = data.map((change) => ({
-    number: change._number,
-    changeId: change.change_id,
-    subject: change.subject,
-    branch: change.branch,
-    updated: change.updated,
-    insertions: change.insertions,
-    deletions: change.deletions,
-    owner: change.owner.name ?? '',
-  }));
+  const changes = await fetchChanges(args.host, query);
 
   return JSON.stringify(changes);
 };
