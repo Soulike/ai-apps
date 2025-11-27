@@ -1,3 +1,5 @@
+import {PollInterval} from './poll-interval.js';
+
 const GITHUB_CLIENT_ID = 'Ov23liMB5j5DBLrvNvec';
 const DEVICE_CODE_URL = 'https://github.com/login/device/code';
 const ACCESS_TOKEN_URL = 'https://github.com/login/oauth/access_token';
@@ -47,11 +49,11 @@ async function pollForToken(
   deviceCode: DeviceCodeResponse,
 ): Promise<TokenResponse> {
   const {device_code, interval, expires_in} = deviceCode;
-  const pollInterval = (interval + 1) * 1000; // Add 1 second buffer
+  const pollInterval = new PollInterval(interval);
   const expiresAt = Date.now() + expires_in * 1000;
 
   while (Date.now() < expiresAt) {
-    await sleep(pollInterval);
+    await sleep(pollInterval.get());
 
     const response = await fetch(ACCESS_TOKEN_URL, {
       method: 'POST',
@@ -82,8 +84,8 @@ async function pollForToken(
           // User hasn't authorized yet, continue polling
           continue;
         case 'slow_down':
-          // We're polling too fast, wait longer next time
-          await sleep(5000);
+          // Increase interval by 5 seconds as per OAuth spec
+          pollInterval.slowDown(5);
           continue;
         case 'expired_token':
           throw new Error('Authorization expired. Please try again.');
