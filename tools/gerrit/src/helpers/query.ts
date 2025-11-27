@@ -16,7 +16,7 @@ export interface GerritQueryParams {
 
 /**
  * Builds a Gerrit query string from query parameters.
- * Handles quoting for values that contain spaces.
+ * Handles quoting for values that contain spaces and escapes quotes.
  *
  * @example
  * buildGerritQuery({ project: 'chromium/src', status: 'merged', branch: 'main' })
@@ -35,8 +35,9 @@ export function buildGerritQuery(params: GerritQueryParams): string {
     .filter((key) => params[key] !== undefined)
     .map((key) => {
       const value = params[key]!;
-      if (value.includes(' ')) {
-        return `${key}:"${value}"`;
+      if (value.includes(' ') || value.includes('"')) {
+        const escaped = value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        return `${key}:"${escaped}"`;
       }
       return `${key}:${value}`;
     })
