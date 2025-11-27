@@ -1,3 +1,4 @@
+import {readFileSync} from 'node:fs';
 import type {RepoProvider} from '../types.js';
 
 // OpenAI configuration
@@ -92,4 +93,17 @@ export function getSubPath(): string[] {
     return [];
   }
   return subPath.split(',').map((p) => p.trim());
+}
+
+export function getCustomPrompt(): string | undefined {
+  const filePath = process.env['CUSTOM_PROMPT_FILE'];
+  if (!filePath) return undefined;
+
+  try {
+    return readFileSync(filePath, 'utf-8');
+  } catch (error) {
+    throw new Error(`Failed to read CUSTOM_PROMPT_FILE: ${filePath}`, {
+      cause: error,
+    });
+  }
 }
