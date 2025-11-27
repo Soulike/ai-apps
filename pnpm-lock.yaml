@@ -46,6 +46,9 @@ importers:
       '@helpers/logger':
         specifier: workspace:*
         version: link:../../libraries/logger
+      '@openai-tools/gerrit':
+        specifier: workspace:*
+        version: link:../../tools/gerrit
       '@openai-tools/git':
         specifier: workspace:*
         version: link:../../tools/git
@@ -132,6 +135,31 @@ importers:
     dependencies:
       openai:
         specifier: ^6.9.1
+        version: 6.9.1
+    devDependencies:
+      '@configs/eslint':
+        specifier: workspace:*
+        version: link:../../configs/eslint
+      '@configs/typescript':
+        specifier: workspace:*
+        version: link:../../configs/typescript
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  tools/gerrit:
+    dependencies:
+      '@ai/openai-session':
+        specifier: workspace:*
+        version: link:../../libraries/openai-session
+      '@helpers/binary-utils':
+        specifier: workspace:*
+        version: link:../../libraries/binary-utils
+      openai:
+        specifier: ^6.0.0
         version: 6.9.1
     devDependencies:
       '@configs/eslint':
