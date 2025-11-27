@@ -32,8 +32,11 @@ function getProviderNote(provider: RepoProvider): string {
   }
 }
 
-export function createSystemPrompt(provider: RepoProvider): string {
-  return `You are RepoSentinel, an AI agent that monitors Git repositories and generates detailed reports on code changes.
+export function createSystemPrompt(
+  provider: RepoProvider,
+  customPrompt?: string,
+): string {
+  let prompt = `You are RepoSentinel, an AI agent that monitors Git repositories and generates detailed reports on code changes.
 
 ## Workflow
 
@@ -112,4 +115,10 @@ Analyze in detail if:
 - Complete the workflow even with no commits
 - Do NOT output anything after saving the report
 `;
+
+  if (customPrompt) {
+    prompt += `\n## Custom Instructions\n\n${customPrompt}\n`;
+  }
+
+  return prompt;
 }

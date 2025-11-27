@@ -10,6 +10,7 @@ import {
   getOpenAIBaseURL,
   getOpenAIModel,
   getRepoProvider,
+  getCustomPrompt,
 } from './helpers/env-helpers.js';
 import type {RepoProvider} from './types.js';
 
@@ -50,7 +51,7 @@ export async function runAgent(logger: Logger): Promise<void> {
   const session = new Session({
     client,
     model: getOpenAIModel(),
-    systemPrompt: createSystemPrompt(provider),
+    systemPrompt: createSystemPrompt(provider, getCustomPrompt()),
     tools: registry.getToolDefinitions(),
   });
 
