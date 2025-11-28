@@ -44,7 +44,16 @@ export const handler: ToolFunction<SaveReportParams> = async (args) => {
   // Ensure directory exists
   await mkdir(dirname(filePath), {recursive: true});
 
-  await writeFile(filePath, content, 'utf-8');
-
-  return JSON.stringify({success: true, filePath});
+  try {
+    // 'wx' flag: write exclusive - fails if file exists
+    await writeFile(filePath, content, {encoding: 'utf-8', flag: 'wx'});
+    return JSON.stringify({success: true, filePath});
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return JSON.stringify({
+      error: 'Failed to save report',
+      filePath,
+      details: message,
+    });
+  }
 };
