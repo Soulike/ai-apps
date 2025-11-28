@@ -7,9 +7,6 @@ export type ToolFunction<T = unknown> = (args: T) => Promise<string> | string;
 
 /**
  * A type-safe OpenAI tool that bundles definition and handler together.
- *
- * The `in` modifier marks T as contravariant, which allows OpenAITool<SpecificType>
- * to be assigned to OpenAITool<unknown> for use in arrays and registries.
  */
 export interface OpenAITool<T> {
   definition: ChatCompletionFunctionTool;
