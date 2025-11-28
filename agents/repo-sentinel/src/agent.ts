@@ -80,7 +80,7 @@ export async function runAgent(logger: Logger): Promise<void> {
   }
 
   // Authenticate with Azure DevOps if using ADO provider
-  if (provider === 'ado') {
+  if (provider === 'ado' && !AdoTokenStore.get()) {
     try {
       const token = await getAdoAccessToken();
       AdoTokenStore.set(token);
