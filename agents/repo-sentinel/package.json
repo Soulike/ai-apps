@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "NODE_ENV=production node dist/index.js"
+    "start": "cross-env NODE_ENV=production node dist/index.js"
   },
   "dependencies": {
     "@ai/openai-session": "workspace:*",
@@ -22,6 +22,7 @@
     "@configs/eslint": "workspace:*",
     "@configs/typescript": "workspace:*",
     "@types/node": "^24.10.1",
+    "cross-env": "^7.0.3",
     "typescript": "^5.9.3"
   }
 }
