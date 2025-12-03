@@ -124,6 +124,14 @@ export function getCheckIntervalHours(): number {
   return parseInt(hours, 10);
 }
 
+export function getMaxFetchHours(): number {
+  const hours = process.env['MAX_FETCH_HOURS'];
+  if (!hours) {
+    throw new Error('MAX_FETCH_HOURS environment variable is not set');
+  }
+  return parseInt(hours, 10);
+}
+
 export function getReportDir(): string {
   const reportDir = process.env['REPORT_DIR'];
   if (!reportDir) {
