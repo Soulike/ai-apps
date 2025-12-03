@@ -47,7 +47,17 @@ Returns: JSON object with:
     const {content, project, topic} = args;
 
     const branch = getBranch();
-    const filename = generateReportFilename(project, branch, topic, new Date());
+
+    let filename: string;
+    try {
+      filename = generateReportFilename(project, branch, topic, new Date());
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      return JSON.stringify({
+        error: 'Invalid parameters',
+        details: message,
+      });
+    }
 
     const reportDir = getReportDir();
     const filePath = join(reportDir, filename);

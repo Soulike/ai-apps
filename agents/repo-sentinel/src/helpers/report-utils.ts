@@ -11,6 +11,16 @@ export function generateReportFilename(
   topic: string,
   date: Date,
 ): string {
+  if (!project.trim()) {
+    throw new Error('project cannot be empty');
+  }
+  if (!branch.trim()) {
+    throw new Error('branch cannot be empty');
+  }
+  if (!topic.trim()) {
+    throw new Error('topic cannot be empty');
+  }
+
   // Use ISO format: 2025-12-03T14-30-00Z (remove milliseconds, replace colons with hyphens)
   const isoTimestamp = date
     .toISOString()
