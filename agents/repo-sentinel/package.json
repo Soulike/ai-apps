@@ -18,12 +18,12 @@
     "@openai-tools/gerrit": "workspace:*",
     "@openai-tools/git": "workspace:*",
     "@openai-tools/github": "workspace:*",
-    "openai": "^6.9.1"
+    "openai": "catalog:"
   },
   "devDependencies": {
     "@configs/eslint": "workspace:*",
     "@configs/typescript": "workspace:*",
-    "@types/node": "^24.10.1",
-    "typescript": "^5.9.3"
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
   }
 }

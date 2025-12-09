@@ -2,17 +2,23 @@
   "name": "ai-apps",
   "version": "1.0.0",
   "author": "",
+  "catalog": {
+    "@types/bun": "^1.3.4",
+    "@types/node": "^24.10.2",
+    "openai": "^6.9.1",
+    "typescript": "^5.9.3"
+  },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
     "@configs/eslint": "workspace:*",
-    "@types/bun": "^1.3.4",
-    "@types/node": "^24.10.2",
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
     "eslint": "^9.39.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
   },
   "commitlint": {
     "extends": [
