@@ -49,6 +49,7 @@ Returns a JSON object with classification, impact assessment, and key changes.`,
     },
   },
   handler: async (args): Promise<string> => {
+    const identifier = crypto.randomUUID().slice(0, 8);
     const registry = new ToolRegistry();
     registry.register(getCommitDetails);
     registry.register(getCommitDiff);
@@ -67,13 +68,13 @@ Use these parameters for tool calls:
         model: getOpenAIModel(),
         systemPrompt: createCommitAnalyzerSubagentSystemPrompt('local'),
         registry,
-        onToolStart: (name, id, args) =>
-          logger.subagentToolStart(name, id, args),
-        onToolEnd: (name, id, output) =>
-          logger.subagentToolEnd(name, id, output),
-        onToolError: (name, id, error) =>
-          logger.subagentToolError(name, id, error),
-        onContent: (content) => logger.subagent(content),
+        onToolStart: (name, toolId, toolArgs) =>
+          logger.subagentToolStart(identifier, name, toolId, toolArgs),
+        onToolEnd: (name, toolId, output) =>
+          logger.subagentToolEnd(identifier, name, toolId, output),
+        onToolError: (name, toolId, error) =>
+          logger.subagentToolError(identifier, name, toolId, error),
+        onContent: (content) => logger.subagent(identifier, content),
       },
       userPrompt,
     );

@@ -42,25 +42,48 @@ export const logger = {
     ColorLogger.green.log(`🤖 [ASSISTANT] ${content}`);
   },
 
-  subagent: (content: string): void => {
-    ColorLogger.cyan.log(`🤖 [SUBAGENT] ${content}`);
+  subagent: (identifier: string, content: string): void => {
+    ColorLogger.cyan.log(`🤖 [SUBAGENT][${identifier}] ${content}`);
   },
 
-  subagentToolStart: (name: string, id: string, input: string): void => {
-    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] --- ${name} (${id}) ---`);
-    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] Input: ${input}`);
+  subagentToolStart: (
+    identifier: string,
+    name: string,
+    toolId: string,
+    input: string,
+  ): void => {
+    ColorLogger.cyan.log(
+      `🔧 [SUBAGENT-TOOL][${identifier}] --- ${name} (${toolId}) ---`,
+    );
+    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL][${identifier}] Input: ${input}`);
   },
 
-  subagentToolEnd: (name: string, id: string, output: string): void => {
+  subagentToolEnd: (
+    identifier: string,
+    name: string,
+    toolId: string,
+    output: string,
+  ): void => {
     if (isNonProduction()) {
-      ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] Output: ${output}`);
+      ColorLogger.cyan.log(
+        `🔧 [SUBAGENT-TOOL][${identifier}] Output: ${output}`,
+      );
     }
-    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] --- End ${name} (${id}) ---`);
+    ColorLogger.cyan.log(
+      `🔧 [SUBAGENT-TOOL][${identifier}] --- End ${name} (${toolId}) ---`,
+    );
   },
 
-  subagentToolError: (name: string, id: string, error: string): void => {
-    ColorLogger.red.error(`🔧 [SUBAGENT-TOOL] Error: ${error}`);
-    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] --- End ${name} (${id}) ---`);
+  subagentToolError: (
+    identifier: string,
+    name: string,
+    toolId: string,
+    error: string,
+  ): void => {
+    ColorLogger.red.error(`🔧 [SUBAGENT-TOOL][${identifier}] Error: ${error}`);
+    ColorLogger.cyan.log(
+      `🔧 [SUBAGENT-TOOL][${identifier}] --- End ${name} (${toolId}) ---`,
+    );
   },
 };
 
