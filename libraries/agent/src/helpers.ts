@@ -9,7 +9,7 @@ import type {
 export function extractContent(response: ChatCompletion): string[] {
   return response.choices
     .map((choice) => choice.message.content)
-    .filter((content): content is string => content !== null);
+    .filter((content): content is string => !!content);
 }
 
 /**
