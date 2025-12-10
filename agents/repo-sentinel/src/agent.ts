@@ -96,7 +96,7 @@ export async function runRepoSentinelAgent(logger: Logger): Promise<void> {
   logger.info(`Starting RepoSentinel agent with ${provider} provider...`);
 
   // Use runAgent with logging callbacks
-  const result = await runAgent(
+  await runAgent(
     {
       apiKey: getOpenAIApiKey(),
       baseURL: getOpenAIBaseURL(),
@@ -111,9 +111,4 @@ export async function runRepoSentinelAgent(logger: Logger): Promise<void> {
     },
     createUserPrompt(),
   );
-
-  // Log final content (may be duplicate if onContent already logged it)
-  if (result.content) {
-    logger.assistant(result.content);
-  }
 }
