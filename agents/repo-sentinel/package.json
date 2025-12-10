@@ -6,10 +6,12 @@
   "module": "./src/index.ts",
   "scripts": {
     "start": "NODE_ENV=production bun src/index.ts",
+    "start:debug": "bun src/index.ts",
     "dev": "bun --watch src/index.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai/agent": "workspace:*",
     "@ai/openai-session": "workspace:*",
     "@helpers/ado-auth": "workspace:*",
     "@helpers/github-auth": "workspace:*",
