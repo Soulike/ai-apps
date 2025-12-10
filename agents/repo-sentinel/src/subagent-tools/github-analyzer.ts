@@ -1,6 +1,7 @@
 import type {OpenAITool} from '@ai/openai-session';
 import {runAgent} from '@ai/agent';
 import {ToolRegistry} from '@ai/openai-session';
+import {logger} from '@helpers/logger';
 import {getCommitDetails, getCommitDiff} from '@openai-tools/github';
 import {
   getOpenAIApiKey,
@@ -80,6 +81,13 @@ Use these parameters for tool calls:
         model: getOpenAIModel(),
         systemPrompt: createCommitAnalyzerSubagentSystemPrompt('github'),
         registry,
+        onToolStart: (name, id, args) =>
+          logger.subagentToolStart(name, id, args),
+        onToolEnd: (name, id, output) =>
+          logger.subagentToolEnd(name, id, output),
+        onToolError: (name, id, error) =>
+          logger.subagentToolError(name, id, error),
+        onContent: (content) => logger.subagent(content),
       },
       userPrompt,
     );

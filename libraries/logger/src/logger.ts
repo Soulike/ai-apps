@@ -41,6 +41,27 @@ export const logger = {
   assistant: (content: string): void => {
     ColorLogger.green.log(`🤖 [ASSISTANT] ${content}`);
   },
+
+  subagent: (content: string): void => {
+    ColorLogger.cyan.log(`🤖 [SUBAGENT] ${content}`);
+  },
+
+  subagentToolStart: (name: string, id: string, input: string): void => {
+    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] --- ${name} (${id}) ---`);
+    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] Input: ${input}`);
+  },
+
+  subagentToolEnd: (name: string, id: string, output: string): void => {
+    if (isNonProduction()) {
+      ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] Output: ${output}`);
+    }
+    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] --- End ${name} (${id}) ---`);
+  },
+
+  subagentToolError: (name: string, id: string, error: string): void => {
+    ColorLogger.red.error(`🔧 [SUBAGENT-TOOL] Error: ${error}`);
+    ColorLogger.cyan.log(`🔧 [SUBAGENT-TOOL] --- End ${name} (${id}) ---`);
+  },
 };
 
 export type Logger = typeof logger;
