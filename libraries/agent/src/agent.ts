@@ -1,5 +1,6 @@
 import {Session, createOpenAIClient} from '@ai/openai-session';
 import type {ToolResult} from '@ai/openai-session';
+import {extractContent, extractToolCalls} from './helpers.js';
 import type {AgentOptions, AgentResult} from './types.js';
 
 /**
@@ -70,29 +71,16 @@ export async function runAgent(
 
   let response = await session.chat(userPrompt);
 
-  // Helper to extract and emit content from all choices
-  const emitContent = () => {
-    for (const choice of response.choices) {
-      if (choice.message.content && onContent) {
-        onContent(choice.message.content);
-      }
-    }
-  };
-
-  // Helper to collect all tool calls from all choices
-  const collectToolCalls = () => {
-    return response.choices.flatMap(
-      (choice) =>
-        choice.message.tool_calls?.filter((tc) => tc.type === 'function') ?? [],
-    );
-  };
-
   // Emit initial response content if any
-  emitContent();
+  if (onContent) {
+    for (const content of extractContent(response)) {
+      onContent(content);
+    }
+  }
 
   // Tool execution loop
   while (Session.requiresToolCall(response)) {
-    const toolCalls = collectToolCalls();
+    const toolCalls = extractToolCalls(response);
 
     // Execute all tool calls in parallel
     const results: ToolResult[] = await Promise.all(
@@ -120,14 +108,17 @@ export async function runAgent(
     );
 
     response = await session.submitToolResults(results);
-    emitContent();
+
+    // Emit content after tool results
+    if (onContent) {
+      for (const content of extractContent(response)) {
+        onContent(content);
+      }
+    }
   }
 
   // Collect final content from all choices
-  const finalContent = response.choices
-    .map((choice) => choice.message.content)
-    .filter(Boolean)
-    .join('\n');
+  const finalContent = extractContent(response).join('\n');
 
   return {content: finalContent};
 }
